@@ -1,6 +1,7 @@
 package com.example.ovabackend.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 import java.time.LocalDate;
 
 @Entity
@@ -11,12 +12,15 @@ public class Ova {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @NotBlank(message = "El título es obligatorio")
     @Column(nullable = false)
     private String titulo;
 
+    @NotBlank(message = "La descripción es obligatoria")
     @Column(nullable = false)
     private String descripcion;
 
+    @NotBlank(message = "El autor es obligatorio")
     @Column(nullable = false)
     private String autor;
 

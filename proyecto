@@ -1,0 +1,110 @@
+PROYECTOOVA/
+ pom.xml
+ src/main/java/com/ova/MainApplication.java
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 
+         http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>com.ova</groupId>
+    <artifactId>PROYECTOOVA</artifactId>
+    <version>1.0.0</version>
+    <packaging>jar</packaging>
+
+    <name>PROYECTOOVA</name>
+    <description>Proyecto OVA interactivo en consola</description>
+
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>3.2.0</version>
+    </parent>
+
+    <dependencies>
+        <!-- Dependencia básica de Spring Boot -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter</artifactId>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <!-- Plugin para empaquetar como ejecutable -->
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+            </plugin>
+        </plugins>
+    </build>
+</project>
+package com.ova;
+
+import org.springframework.boot.CommandLineRunner;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+
+import java.util.Scanner;
+
+@SpringBootApplication
+public class MainApplication implements CommandLineRunner {
+
+    public static void main(String[] args) {
+        SpringApplication.run(MainApplication.class, args);
+    }
+
+    @Override
+    public void run(String... args) {
+        Scanner sc = new Scanner(System.in);
+        int opcion;
+
+        System.out.println("===== MENÚ OVA =====");
+        System.out.println("1) OVA simulador de caché");
+        System.out.println("2) Algoritmos de ordenamiento visual");
+        System.out.print("Presione opción 1 o 2: ");
+        opcion = sc.nextInt();
+
+        switch (opcion) {
+            case 1 -> simuladorCache();
+            case 2 -> algoritmosOrdenamiento();
+            default -> System.out.println("Opción inválida");
+        }
+    }
+
+    private void simuladorCache() {
+        System.out.println("Entrando al simulador de caché...");
+        int[] cache = new int[3];
+        int[] referencias = {1, 2, 3, 4, 1, 2, 5};
+        int pos = 0;
+
+        for (int ref : referencias) {
+            cache[pos] = ref;
+            pos = (pos + 1) % cache.length;
+            System.out.print("Cache: ");
+            for (int c : cache) System.out.print(c + " ");
+            System.out.println();
+        }
+    }
+
+    private void algoritmosOrdenamiento() {
+        System.out.println("Entrando a los algoritmos de ordenamiento visual...");
+        int[] arr = {5, 3, 8, 4, 2};
+
+        System.out.println("Ordenamiento burbuja paso a paso:");
+        for (int i = 0; i < arr.length - 1; i++) {
+            for (int j = 0; j < arr.length - i - 1; j++) {
+                if (arr[j] > arr[j + 1]) {
+                    int temp = arr[j];
+                    arr[j] = arr[j + 1];
+                    arr[j + 1] = temp;
+                }
+                for (int k : arr) System.out.print(k + " ");
+                System.out.println();
+            }
+        }
+        System.out.println("Resultado final:");
+        for (int k : arr) System.out.print(k + " ");
+    }
+}
+

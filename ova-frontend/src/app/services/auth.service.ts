@@ -17,4 +17,20 @@ export class AuthService {
   register(user: { username: string; password: string }): Observable<any> {
     return this.http.post(`${this.apiUrl}/register`, user);
   }
+
+  setToken(token: string) {
+    localStorage.setItem('auth_token', token);
+  }
+
+  getToken(): string | null {
+    return localStorage.getItem('auth_token');
+  }
+
+  isAuthenticated(): boolean {
+    return !!this.getToken();
+  }
+
+  logout() {
+    localStorage.removeItem('auth_token');
+  }
 }

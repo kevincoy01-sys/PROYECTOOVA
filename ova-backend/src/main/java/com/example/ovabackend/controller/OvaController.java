@@ -2,6 +2,7 @@ package com.example.ovabackend.controller;
 
 import com.example.ovabackend.model.Ova;
 import com.example.ovabackend.service.OvaService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -28,12 +29,12 @@ public class OvaController {
     }
 
     @PostMapping
-    public ResponseEntity<Ova> createOva(@RequestBody Ova ova) {
+    public ResponseEntity<Ova> createOva(@Valid @RequestBody Ova ova) {
         return ResponseEntity.ok(ovaService.createOva(ova));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Ova> updateOva(@PathVariable Long id, @RequestBody Ova ovaDetails) {
+    public ResponseEntity<Ova> updateOva(@PathVariable Long id, @Valid @RequestBody Ova ovaDetails) {
         Ova updatedOva = ovaService.updateOva(id, ovaDetails);
         if (updatedOva != null) {
             return ResponseEntity.ok(updatedOva);
