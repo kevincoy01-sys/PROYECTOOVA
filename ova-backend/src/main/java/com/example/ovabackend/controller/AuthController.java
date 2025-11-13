@@ -1,5 +1,7 @@
 package com.example.ovabackend.controller;
 
+import com.example.ovabackend.model.User;
+import com.example.ovabackend.repository.UserRepository;
 import com.example.ovabackend.security.JwtTokenProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -24,6 +26,9 @@ public class AuthController {
 
     @Autowired
     private PasswordEncoder passwordEncoder;
+    
+    @Autowired
+    private UserRepository userRepository;
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody Map<String, String> request) {
@@ -43,11 +48,21 @@ public class AuthController {
 
     @PostMapping("/register")
     public ResponseEntity<?> register(@RequestBody Map<String, String> request) {
-        // Simulate user registration logic
         String username = request.get("username");
-        String password = passwordEncoder.encode(request.get("password"));
-
-        // Save user to database (not implemented yet)
+        String password = request.get("password");
+        
+        // Check if user already exists
+        if (userRepository.findByUsername(username).isPresent()) {
+            Map<String, String> response = new HashMap<>();
+            response.put("error", "Username already exists");
+            return ResponseEntity.badRequest().body(response);
+        }
+        
+        // Create new user
+        User user = new User();
+        user.setUsername(username);
+        user.setPassword(passwordEncoder.encode(password));
+        userRepository.save(user);
 
         Map<String, String> response = new HashMap<>();
         response.put("message", "User registered successfully");
