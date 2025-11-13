@@ -1,1 +1,68 @@
-<p>ova-catalog works!</p>
+<div class="ova-catalog-container">
+  <div class="header">
+    <h1>Catálogo de OVAs</h1>
+    <button class="btn-primary" (click)="toggleForm()">
+      {{ showForm ? 'Cancelar' : 'Crear Nueva OVA' }}
+    </button>
+  </div>
+
+  <!-- Formulario de creación -->
+  <div class="form-container" *ngIf="showForm">
+    <h2>Nueva OVA</h2>
+    <form (ngSubmit)="createOva()">
+      <div class="form-group">
+        <label for="titulo">Título:</label>
+        <input 
+          type="text" 
+          id="titulo" 
+          [(ngModel)]="newOva.titulo" 
+          name="titulo" 
+          required
+          placeholder="Ingrese el título">
+      </div>
+
+      <div class="form-group">
+        <label for="descripcion">Descripción:</label>
+        <textarea 
+          id="descripcion" 
+          [(ngModel)]="newOva.descripcion" 
+          name="descripcion" 
+          required
+          rows="4"
+          placeholder="Ingrese la descripción"></textarea>
+      </div>
+
+      <div class="form-group">
+        <label for="autor">Autor:</label>
+        <input 
+          type="text" 
+          id="autor" 
+          [(ngModel)]="newOva.autor" 
+          name="autor" 
+          required
+          placeholder="Ingrese el autor">
+      </div>
+
+      <button type="submit" class="btn-success">Guardar OVA</button>
+    </form>
+  </div>
+
+  <!-- Lista de OVAs -->
+  <div class="ovas-grid">
+    <div class="ova-card" *ngFor="let ova of ovas">
+      <div class="ova-header">
+        <h3>{{ ova.titulo }}</h3>
+        <button class="btn-delete" (click)="deleteOva(ova.id)">×</button>
+      </div>
+      <p class="ova-description">{{ ova.descripcion }}</p>
+      <div class="ova-footer">
+        <span class="ova-author">👤 {{ ova.autor }}</span>
+        <span class="ova-date">📅 {{ ova.fechaCreacion }}</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="empty-state" *ngIf="ovas.length === 0 && !showForm">
+    <p>No hay OVAs disponibles. ¡Crea la primera!</p>
+  </div>
+</div>
