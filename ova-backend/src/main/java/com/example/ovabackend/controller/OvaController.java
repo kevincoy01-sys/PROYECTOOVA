@@ -32,6 +32,15 @@ public class OvaController {
         return ResponseEntity.ok(ovaService.createOva(ova));
     }
 
+    @PutMapping("/{id}")
+    public ResponseEntity<Ova> updateOva(@PathVariable Long id, @RequestBody Ova ovaDetails) {
+        Ova updatedOva = ovaService.updateOva(id, ovaDetails);
+        if (updatedOva != null) {
+            return ResponseEntity.ok(updatedOva);
+        }
+        return ResponseEntity.notFound().build();
+    }
+
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteOva(@PathVariable Long id) {
         ovaService.deleteOva(id);

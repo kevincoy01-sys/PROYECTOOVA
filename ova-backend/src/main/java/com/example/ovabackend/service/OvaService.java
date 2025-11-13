@@ -26,6 +26,19 @@ public class OvaService {
         return ovaRepository.save(ova);
     }
 
+    public Ova updateOva(Long id, Ova ovaDetails) {
+        Optional<Ova> ovaOptional = ovaRepository.findById(id);
+        if (ovaOptional.isPresent()) {
+            Ova ova = ovaOptional.get();
+            ova.setTitulo(ovaDetails.getTitulo());
+            ova.setDescripcion(ovaDetails.getDescripcion());
+            ova.setAutor(ovaDetails.getAutor());
+            ova.setFechaCreacion(ovaDetails.getFechaCreacion());
+            return ovaRepository.save(ova);
+        }
+        return null;
+    }
+
     public void deleteOva(Long id) {
         ovaRepository.deleteById(id);
     }
