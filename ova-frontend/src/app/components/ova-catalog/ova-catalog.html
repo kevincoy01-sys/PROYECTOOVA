@@ -2,16 +2,29 @@
   <div class="header">
     <h1>Catálogo de OVAs</h1>
     <button class="btn-primary" (click)="toggleForm()">
-      {{ showForm ? 'Cancelar' : 'Crear Nueva OVA' }}
+      {{ showForm ? 'Cancelar' : (isEditing ? 'Editar OVA' : 'Crear Nueva OVA') }}
     </button>
   </div>
 
-  <!-- Formulario de creación -->
+  <!-- Barra de búsqueda -->
+  <div class="search-container" *ngIf="!showForm">
+    <input 
+      type="text" 
+      class="search-input" 
+      [(ngModel)]="searchTerm" 
+      (input)="searchOvas()"
+      placeholder="🔍 Buscar por título, descripción o autor...">
+    <span class="search-results" *ngIf="searchTerm">
+      {{ filteredOvas.length }} resultado(s) encontrado(s)
+    </span>
+  </div>
+
+  <!-- Formulario de creación/edición -->
   <div class="form-container" *ngIf="showForm">
-    <h2>Nueva OVA</h2>
+    <h2>{{ isEditing ? 'Editar OVA' : 'Nueva OVA' }}</h2>
     <form (ngSubmit)="createOva()">
       <div class="form-group">
-        <label for="titulo">Título:</label>
+        <label for="titulo">Título:<span class="required">*</span></label>
         <input 
           type="text" 
           id="titulo" 
@@ -22,7 +35,7 @@
       </div>
 
       <div class="form-group">
-        <label for="descripcion">Descripción:</label>
+        <label for="descripcion">Descripción:<span class="required">*</span></label>
         <textarea 
           id="descripcion" 
           [(ngModel)]="newOva.descripcion" 
@@ -33,7 +46,7 @@
       </div>
 
       <div class="form-group">
-        <label for="autor">Autor:</label>
+        <label for="autor">Autor:<span class="required">*</span></label>
         <input 
           type="text" 
           id="autor" 
@@ -43,16 +56,21 @@
           placeholder="Ingrese el autor">
       </div>
 
-      <button type="submit" class="btn-success">Guardar OVA</button>
+      <button type="submit" class="btn-success">
+        {{ isEditing ? 'Actualizar OVA' : 'Guardar OVA' }}
+      </button>
     </form>
   </div>
 
   <!-- Lista de OVAs -->
   <div class="ovas-grid">
-    <div class="ova-card" *ngFor="let ova of ovas">
+    <div class="ova-card" *ngFor="let ova of filteredOvas">
       <div class="ova-header">
         <h3>{{ ova.titulo }}</h3>
-        <button class="btn-delete" (click)="deleteOva(ova.id)">×</button>
+        <div class="ova-actions">
+          <button class="btn-edit" (click)="editOva(ova)" title="Editar">✏️</button>
+          <button class="btn-delete" (click)="deleteOva(ova.id)" title="Eliminar">🗑️</button>
+        </div>
       </div>
       <p class="ova-description">{{ ova.descripcion }}</p>
       <div class="ova-footer">
@@ -62,7 +80,8 @@
     </div>
   </div>
 
-  <div class="empty-state" *ngIf="ovas.length === 0 && !showForm">
-    <p>No hay OVAs disponibles. ¡Crea la primera!</p>
+  <div class="empty-state" *ngIf="filteredOvas.length === 0 && !showForm">
+    <p *ngIf="searchTerm">No se encontraron OVAs que coincidan con "{{ searchTerm }}"</p>
+    <p *ngIf="!searchTerm">No hay OVAs disponibles. ¡Crea la primera!</p>
   </div>
 </div>
