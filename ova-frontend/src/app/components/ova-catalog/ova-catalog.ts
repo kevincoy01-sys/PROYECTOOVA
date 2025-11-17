@@ -12,7 +12,10 @@ import { FormsModule } from '@angular/forms';
 })
 export class OvaCatalogComponent implements OnInit {
   ovas: Ova[] = [];
+  filteredOvas: Ova[] = [];
   showForm = false;
+  isEditing = false;
+  searchTerm = '';
   newOva: Ova = {
     titulo: '',
     descripcion: '',
@@ -27,9 +30,30 @@ export class OvaCatalogComponent implements OnInit {
   }
 
   loadOvas() {
-    this.ovaService.getAllOvas().subscribe(response => {
-      this.ovas = response;
+    this.ovaService.getAllOvas().subscribe({
+      next: (response) => {
+        this.ovas = response;
+        this.filteredOvas = response;
+      },
+      error: (error) => {
+        console.error('Error al cargar OVAs:', error);
+        alert('Error al cargar las OVAs. Por favor, intente nuevamente.');
+      }
     });
+  }
+
+  searchOvas() {
+    if (!this.searchTerm.trim()) {
+      this.filteredOvas = this.ovas;
+      return;
+    }
+
+    const term = this.searchTerm.toLowerCase();
+    this.filteredOvas = this.ovas.filter(ova =>
+      ova.titulo.toLowerCase().includes(term) ||
+      ova.descripcion.toLowerCase().includes(term) ||
+      ova.autor.toLowerCase().includes(term)
+    );
   }
 
   toggleForm() {
@@ -42,17 +66,58 @@ export class OvaCatalogComponent implements OnInit {
   createOva() {
     if (this.newOva.titulo && this.newOva.descripcion && this.newOva.autor) {
       this.newOva.fechaCreacion = new Date().toISOString().split('T')[0];
-      this.ovaService.createOva(this.newOva).subscribe(() => {
-        this.loadOvas();
-        this.toggleForm();
+      
+      if (this.isEditing && this.newOva.id) {
+        this.updateOva();
+      } else {
+        this.ovaService.createOva(this.newOva).subscribe({
+          next: () => {
+            this.loadOvas();
+            this.toggleForm();
+            alert('OVA creada exitosamente');
+          },
+          error: (error) => {
+            console.error('Error al crear OVA:', error);
+            alert('Error al crear la OVA. Por favor, verifique los datos.');
+          }
+        });
+      }
+    }
+  }
+
+  editOva(ova: Ova) {
+    this.newOva = { ...ova };
+    this.isEditing = true;
+    this.showForm = true;
+  }
+
+  updateOva() {
+    if (this.newOva.id) {
+      this.ovaService.updateOva(this.newOva.id, this.newOva).subscribe({
+        next: () => {
+          this.loadOvas();
+          this.toggleForm();
+          alert('OVA actualizada exitosamente');
+        },
+        error: (error) => {
+          console.error('Error al actualizar OVA:', error);
+          alert('Error al actualizar la OVA. Por favor, intente nuevamente.');
+        }
       });
     }
   }
 
   deleteOva(id: number | undefined) {
     if (id && confirm('¿Está seguro de eliminar este OVA?')) {
-      this.ovaService.deleteOva(id).subscribe(() => {
-        this.loadOvas();
+      this.ovaService.deleteOva(id).subscribe({
+        next: () => {
+          this.loadOvas();
+          alert('OVA eliminada exitosamente');
+        },
+        error: (error) => {
+          console.error('Error al eliminar OVA:', error);
+          alert('Error al eliminar la OVA. Por favor, intente nuevamente.');
+        }
       });
     }
   }
@@ -64,5 +129,6 @@ export class OvaCatalogComponent implements OnInit {
       autor: '',
       fechaCreacion: ''
     };
+    this.isEditing = false;
   }
 }
