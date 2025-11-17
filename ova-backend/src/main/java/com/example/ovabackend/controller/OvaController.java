@@ -22,6 +22,11 @@ public class OvaController {
         return ResponseEntity.ok(ovaService.getAllOvas());
     }
 
+    @GetMapping("/search")
+    public ResponseEntity<List<Ova>> searchOvas(@RequestParam String query) {
+        return ResponseEntity.ok(ovaService.searchOvas(query));
+    }
+
     @GetMapping("/{id}")
     public ResponseEntity<Ova> getOvaById(@PathVariable Long id) {
         Optional<Ova> ova = ovaService.getOvaById(id);

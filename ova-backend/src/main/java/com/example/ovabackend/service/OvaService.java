@@ -18,6 +18,12 @@ public class OvaService {
         return ovaRepository.findAll();
     }
 
+    public List<Ova> searchOvas(String query) {
+        return ovaRepository.findByTituloContainingIgnoreCaseOrDescripcionContainingIgnoreCaseOrAutorContainingIgnoreCase(
+            query, query, query
+        );
+    }
+
     public Optional<Ova> getOvaById(Long id) {
         return ovaRepository.findById(id);
     }
