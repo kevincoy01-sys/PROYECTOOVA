@@ -102,15 +102,39 @@ java -jar target/ova-backend-1.0.0.jar
 
 El backend estará disponible en: `http://localhost:8080`
 
+### ✅ Verificación de Servicios
+
+#### 1. Verificar que el backend esté corriendo (REQUERIDO PARA EVALUACIÓN)
+```bash
+curl http://localhost:8080/actuator/health
+```
+**Respuesta esperada:** `{"status":"UP"}`
+
+#### 2. Acceder a Swagger UI para probar endpoints (REQUERIDO PARA EVALUACIÓN)
+Abrir en navegador: `http://localhost:8080/swagger-ui.html`
+
 **URLs Importantes:**
-- **Swagger UI:** `http://localhost:8080/swagger-ui/index.html` - Documentación interactiva de API
-- **Actuator Health:** `http://localhost:8080/actuator/health` - Estado del servicio
+- **Swagger UI:** `http://localhost:8080/swagger-ui.html` - Documentación interactiva de API
+- **Actuator Health:** `http://localhost:8080/actuator/health` - Estado del servicio ✅ REQUERIDO
 - **Actuator Info:** `http://localhost:8080/actuator/info` - Información del servicio  
 - **Actuator Metrics:** `http://localhost:8080/actuator/metrics` - Métricas de rendimiento
 - **H2 Console:** `http://localhost:8080/h2-console` - Consola de base de datos
   - JDBC URL: `jdbc:h2:file:./data/ovadb`
   - Username: `sa`
   - Password: _(dejar en blanco)_
+
+### 🧪 Pruebas de Endpoints CRUD
+
+Para probar todos los endpoints con curl, ver el archivo: **[PRUEBAS_ENDPOINTS.md](./PRUEBAS_ENDPOINTS.md)**
+
+Este archivo contiene comandos curl completos para:
+- ✅ Verificar health y Swagger
+- ✅ Probar registro y login (auth-service)
+- ✅ CRUD completo de OVAs (ova-service)
+- ✅ CRUD completo de Módulos (module-service)
+- ✅ CRUD completo de Lecciones (lesson-service)
+- ✅ CRUD completo de Assets (asset-service)
+- ✅ CRUD completo de Ratings (rating-service)
 
 ### Frontend (Angular)
 
@@ -128,38 +152,55 @@ El frontend estará disponible en: `http://localhost:4200`
 
 ## 🔗 API Endpoints por Microservicio
 
+> **📖 Documentación Completa:** Ver [docs/microservicios.md](./docs/microservicios.md) para el inventario detallado de microservicios.
+
 ### 🔐 Auth Service (`/api/auth`)
 - `POST /api/auth/register` - Registrar nuevo usuario
 - `POST /api/auth/login` - Login y obtener JWT token
+- `GET /api/auth/me` - Información del usuario autenticado
+- `GET /api/users` - Listar todos los usuarios
+- `GET /api/users/{id}` - Obtener usuario por ID
 
 ### 📚 OVA Service (`/api/ovas`)
-- `GET /api/ovas` - Listar todos los OVAs
-- `POST /api/ovas` - Crear nuevo OVA
-- `GET /api/ovas/{id}` - Obtener OVA por ID
-- `PUT /api/ovas/{id}` - Actualizar OVA
-- `DELETE /api/ovas/{id}` - Eliminar OVA
+- `GET /api/ovas` - Listar todos los OVAs ✅ CRUD
+- `POST /api/ovas` - Crear nuevo OVA ✅ CRUD
+- `GET /api/ovas/{id}` - Obtener OVA por ID ✅ CRUD
+- `PUT /api/ovas/{id}` - Actualizar OVA ✅ CRUD
+- `DELETE /api/ovas/{id}` - Eliminar OVA ✅ CRUD
+- `GET /api/ovas/search?query={text}` - Buscar OVAs
 
 ### 📖 Module Service (`/api/modules`)
+- `GET /api/modules` - Listar todos los módulos ✅ CRUD
+- `POST /api/modules` - Crear módulo ✅ CRUD
+- `GET /api/modules/{id}` - Obtener módulo por ID ✅ CRUD
 - `GET /api/modules/ova/{ovaId}` - Módulos de un OVA
-- `POST /api/modules` - Crear módulo
-- `PUT /api/modules/{id}` - Actualizar módulo
-- `DELETE /api/modules/{id}` - Eliminar módulo
+- `PUT /api/modules/{id}` - Actualizar módulo ✅ CRUD
+- `DELETE /api/modules/{id}` - Eliminar módulo ✅ CRUD
 
 ### 📝 Lesson Service (`/api/lessons`)
+- `GET /api/lessons` - Listar todas las lecciones ✅ CRUD
+- `POST /api/lessons` - Crear lección ✅ CRUD
+- `GET /api/lessons/{id}` - Obtener lección por ID ✅ CRUD
 - `GET /api/lessons/module/{moduleId}` - Lecciones de un módulo
-- `POST /api/lessons` - Crear lección
-- `PUT /api/lessons/{id}` - Actualizar lección
-- `DELETE /api/lessons/{id}` - Eliminar lección
+- `PUT /api/lessons/{id}` - Actualizar lección ✅ CRUD
+- `DELETE /api/lessons/{id}` - Eliminar lección ✅ CRUD
 
 ### 📎 Asset Service (`/api/assets`)
+- `GET /api/assets` - Listar todos los assets ✅ CRUD
+- `POST /api/assets` - Crear asset (IMAGE/PDF/VIDEO) ✅ CRUD
+- `GET /api/assets/{id}` - Obtener asset por ID ✅ CRUD
 - `GET /api/assets/lesson/{lessonId}` - Assets de una lección
-- `POST /api/assets` - Subir asset (IMAGE/PDF/VIDEO)
-- `DELETE /api/assets/{id}` - Eliminar asset
+- `PUT /api/assets/{id}` - Actualizar asset ✅ CRUD
+- `DELETE /api/assets/{id}` - Eliminar asset ✅ CRUD
 
 ### ⭐ Rating Service (`/api/ratings`)
+- `GET /api/ratings` - Listar todas las calificaciones ✅ CRUD
+- `POST /api/ratings` - Crear calificación (1-5 estrellas) ✅ CRUD
+- `GET /api/ratings/{id}` - Obtener calificación por ID ✅ CRUD
 - `GET /api/ratings/ova/{ovaId}` - Calificaciones de un OVA
-- `POST /api/ratings` - Crear calificación (1-5)
-- `GET /api/ratings/ova/{ovaId}/average` - Promedio de calificaciones
+- `GET /api/ratings/average/{ovaId}` - Promedio de calificaciones
+- `PUT /api/ratings/{id}` - Actualizar calificación ✅ CRUD
+- `DELETE /api/ratings/{id}` - Eliminar calificación ✅ CRUD
 
 ### 🏥 Actuator Endpoints
 - `GET /actuator/health` - Estado del servicio
