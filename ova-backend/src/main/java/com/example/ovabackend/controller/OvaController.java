@@ -2,6 +2,8 @@ package com.example.ovabackend.controller;
 
 import com.example.ovabackend.model.Ova;
 import com.example.ovabackend.service.OvaService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -12,12 +14,14 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/ovas")
+@Tag(name = "OVA", description = "Gestión de Objetos Virtuales de Aprendizaje")
 public class OvaController {
 
     @Autowired
     private OvaService ovaService;
 
     @GetMapping
+    @Operation(summary = "Obtener todos los OVAs", description = "Retorna una lista de todos los OVAs disponibles")
     public ResponseEntity<List<Ova>> getAllOvas() {
         return ResponseEntity.ok(ovaService.getAllOvas());
     }

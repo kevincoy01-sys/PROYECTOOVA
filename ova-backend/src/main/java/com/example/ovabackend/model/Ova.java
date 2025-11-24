@@ -3,6 +3,8 @@ package com.example.ovabackend.model;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "ovas")
@@ -17,7 +19,7 @@ public class Ova {
     private String titulo;
 
     @NotBlank(message = "La descripción es obligatoria")
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "TEXT")
     private String descripcion;
 
     @NotBlank(message = "El autor es obligatorio")
@@ -26,6 +28,12 @@ public class Ova {
 
     @Column(nullable = false)
     private LocalDate fechaCreacion;
+
+    @OneToMany(mappedBy = "ova", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Module> modules = new ArrayList<>();
+
+    @OneToMany(mappedBy = "ova", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Rating> ratings = new ArrayList<>();
 
     // Getters and setters
     public Long getId() {
@@ -66,5 +74,21 @@ public class Ova {
 
     public void setFechaCreacion(LocalDate fechaCreacion) {
         this.fechaCreacion = fechaCreacion;
+    }
+
+    public List<Module> getModules() {
+        return modules;
+    }
+
+    public void setModules(List<Module> modules) {
+        this.modules = modules;
+    }
+
+    public List<Rating> getRatings() {
+        return ratings;
+    }
+
+    public void setRatings(List<Rating> ratings) {
+        this.ratings = ratings;
     }
 }
